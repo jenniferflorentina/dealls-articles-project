@@ -27,21 +27,12 @@ const Login = () => {
 
     const handleSubmit = async () => {
         const isFormValid = formRef.current.check();
-        if (isFormValid) {
-            setErrorMessage('');
-            // Mock API call for login
-            const { name, password } = formValue;
-
-            // Replace with your actual login logic
-            if (name === 'admin' && password === 'password') {
-                storageHelper.saveItem('user', {
-                    ...formValue,
-                    rememberMe
-                });
-                navigate('/');
-            } else {
-                setErrorMessage('Invalid name or password.');
-            }
+        if (isFormValid) {            
+            storageHelper.saveItem('user', {
+                ...formValue,
+                rememberMe
+            });
+            navigate('/');
         }
     };
 
