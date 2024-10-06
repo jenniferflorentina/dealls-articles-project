@@ -1,0 +1,19 @@
+.rs-table-row-header  {
+    background-color: #f0f3f5;
+    font-weight: 600;
+    color: #222;
+    font-size: 14px;
+    border-bottom: 1px solid #d1d1d1;
+    pointer-events: none;
+    
+    .rs-table-cell {
+        background-color: unset;
+    }
+}
+
+.table-action-button {
+    padding: 0 !important;
+    &:hover {
+        background-color: unset !important;
+    }
+}

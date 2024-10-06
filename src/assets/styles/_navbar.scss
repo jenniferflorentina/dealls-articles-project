@@ -1,0 +1,22 @@
+.rs-navbar-item-active {
+    color: #212529 !important;
+    &::before {
+        background-color: #212529;
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        left: 0;
+        right: 0;
+        z-index: 1;
+    }
+}
+
+.account-profile-icon {
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    background-color: var(--rs-primary-900);
+    color: #ffffff;
+}

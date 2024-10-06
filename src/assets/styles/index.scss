@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+// @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'rsuite/dist/rsuite.min.css';
+
+@import '_rsvar.scss';
+@import '_navbar.scss';
+@import '_content.scss';
+@import '_table.scss';
+@import '_login.scss';
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+  
+.prose img {
+    max-width: 100%; /* Ensure images don't exceed the width of their container */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Center the images */
+    margin: 0 auto; /* Center images in the container */
+}
