@@ -8,54 +8,53 @@ const ArticlesCarousel = () => {
     const [activeIndex, setActiveIndex] = useState(0); // Track the active slide
     const [totalPages, setTotalPages] = useState(1);
     const [searchTerm, setSearchTerm] = useState(""); // Track the search input
+    const [loading, setLoading] = useState(false); // Loading state
+    const [error, setError] = useState(null); // Error state
 
-    // Fetch articles for the given page with optional search term
     const fetchArticles = async (page, search = "") => {
+        setLoading(true);
+        setError(null); // Reset error state
         try {
             const response = await articleApi.getArticles({
                 page,
                 limit: 5,
-                search: search, // Pass the search term to API
+                search,
             });
             const articles = response.data;
             setTotalPages(response.metadata.total_pages);
 
-            // Store fetched articles for each page
             setArticlePages((prev) => {
                 const updatedPages = [...prev];
                 updatedPages[page - 1] = articles;
                 return updatedPages;
             });
         } catch (error) {
+            setError("Error fetching articles. Please try again later.");
             console.error("Error fetching articles:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        // Fetch articles for the current slide (page) if not already fetched
-        if (!articlePages[activeIndex]) {
-            fetchArticles(activeIndex + 1, searchTerm);
-        }
-    }, [activeIndex, searchTerm, articlePages]);
+        fetchArticles(activeIndex + 1, searchTerm);
+    }, [activeIndex, searchTerm]);
 
-    // Handle search functionality
     const handleSearchChange = (e) => {
         const search = e.target.value;
-        setSearchTerm(search); // Update search term
-        setActiveIndex(0); // Reset to first slide
-        setArticlePages([]); // Clear previous results
-        fetchArticles(1, search); // Fetch first page with updated search term
+        setSearchTerm(search);
+        setActiveIndex(0);
+        setArticlePages([]);
+        fetchArticles(1, search);
     };
 
-    // Clear search input and reset
     const handleClearSearch = () => {
-        setSearchTerm(""); // Clear search term
-        setActiveIndex(0); // Reset to first slide
-        setArticlePages([]); // Clear previous results
-        fetchArticles(1, ""); // Fetch first page without search term
+        setSearchTerm("");
+        setActiveIndex(0);
+        setArticlePages([]);
+        fetchArticles(1, "");
     };
 
-    // Handle slide change
     const handleSlideChange = (index) => {
         setActiveIndex(index);
     };
@@ -81,26 +80,31 @@ const ArticlesCarousel = () => {
                     className="border border-gray-300 rounded-lg p-2 w-full sm:w-2/3"
                     placeholder="Search articles..."
                     value={searchTerm}
-                    onChange={handleSearchChange} // Trigger search on input change
+                    onChange={handleSearchChange}
                 />
                 {searchTerm && (
                     <button
                         className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        onClick={handleClearSearch} // Clear search term on button click
+                        onClick={handleClearSearch}
                     >
                         Clear
                     </button>
                 )}
             </div>
 
+            {/* Loading and Error Handling */}
+            {loading && <p className="text-gray-500">Loading articles...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+
             {/* Carousel */}
             <Carousel
                 autoplay={false}
                 className="custom-slider"
-                activeIndex={activeIndex} // Set the current active index for dots and sliding
-                onSelect={handleSlideChange} // Synchronize dots with manual navigation
+                activeIndex={activeIndex}
+                onSelect={handleSlideChange}
                 placement="bottom"
                 shape="bar"
+                aria-live="polite" // Announce content changes
             >
                 {articlePages.map((articles, pageIndex) => (
                     <div
@@ -112,12 +116,13 @@ const ArticlesCarousel = () => {
                                 <Link
                                     to={`/articles/${article.id}`}
                                     key={article.id}
-                                    className="lg:h-4/5 w-100 p-2 p-2 lg:p-4 bg-white shadow-md hover:shadow-lg transition-shadow rounded-md"
+                                    className="lg:h-4/5 w-100 p-2 lg:p-4 bg-white shadow-md hover:shadow-lg transition-shadow rounded-md"
+                                    aria-label={`Read article titled "${article.title}"`} // Clear description for accessibility
                                 >
-                                    <h2 className="text-sm font-semibold text-gray-800">
+                                    <h2 className="text-sm font-semibold text-gray-800" itemProp="headline">
                                         {article.title}
                                     </h2>
-                                    <p>{article.slug}</p>
+                                    <p itemProp="description">{article.slug}</p>
                                 </Link>
                             ))}
                     </div>

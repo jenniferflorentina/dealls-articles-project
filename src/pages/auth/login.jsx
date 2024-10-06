@@ -1,48 +1,54 @@
 import { useRef, useState } from "react";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { Button, Checkbox, Form, Message, Schema, InputGroup } from "rsuite";
-import storageHelper from "app/helpers/storage.helper"
+import storageHelper from "app/helpers/storage.helper";
 import EyeIcon from '@rsuite/icons/legacy/Eye';
 import EyeSlashIcon from '@rsuite/icons/legacy/EyeSlash';
 
 const model = Schema.Model({
     name: Schema.Types.StringType().isRequired('Name is required'),
     password: Schema.Types.StringType().isRequired('Password is required'),
-})
+});
 
 const Login = () => {
-    const navigate = useNavigate()
-    const [errorMessage, setErrorMessage] = useState('')
-
-    const formRef = useRef()
+    const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState('');
+    const formRef = useRef();
     const [formValue, setFormValue] = useState({
         name: '',
         password: ''
-    })
-
-    const [visible, setVisible] = useState(false)
+    });
+    const [visible, setVisible] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false); // State for Remember Me checkbox
 
     const handleChange = () => {
         setVisible(!visible);
-    }
+    };
 
-    const hanleSubmit = async () => {
-        const isFormValid = formRef.current.check()
-        if(isFormValid) {
-            setErrorMessage('')
-    
-            storageHelper.saveItem('user', {
-                ...formValue
-            })
+    const handleSubmit = async () => {
+        const isFormValid = formRef.current.check();
+        if (isFormValid) {
+            setErrorMessage('');
+            // Mock API call for login
+            const { name, password } = formValue;
 
-            navigate('/')
+            // Replace with your actual login logic
+            if (name === 'admin' && password === 'password') {
+                storageHelper.saveItem('user', {
+                    ...formValue,
+                    rememberMe
+                });
+                navigate('/');
+            } else {
+                setErrorMessage('Invalid name or password.');
+            }
         }
+    };
 
-    }
     return (
         <div className="flex justify-center items-center h-[100dvh]">
             <div className="login-form w-[300px]">
-                <img alt="stories" src="/img/brand.png" width="150" className="mb-6"/>
+                <img alt="stories" src="/img/brand.png" width="150" className="mb-6" />
                 <h3>Welcome</h3>
                 <div className="mb-9 text-[16px]">Please fill your detail to access your account.</div>
                 <Form
@@ -50,7 +56,7 @@ const Login = () => {
                     model={model}
                     formValue={formValue}
                     onChange={setFormValue}
-                    onSubmit={hanleSubmit}
+                    onSubmit={handleSubmit}
                     checkTrigger="none"
                     fluid
                 >
@@ -69,12 +75,15 @@ const Login = () => {
                     </Form.Group>
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
                         <Checkbox 
-                            value={true} 
+                            checked={rememberMe} 
+                            onChange={() => setRememberMe(!rememberMe)} 
                             className="[&>div>label]:!font-medium [&>div>label]:text-[#343a40] ml-[-8px]"
-                        >Remember me</Checkbox>
+                        >
+                            Remember me
+                        </Checkbox>
                         <div className="font-medium sm:text-center mt-6 md:mt-0 text-[#1a5999]">Forget Password?</div>
                     </div>
-                    {errorMessage !== '' && (
+                    {errorMessage && (
                         <Message 
                             showIcon 
                             type="warning"

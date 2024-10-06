@@ -33,23 +33,24 @@ const ArticleByCategories = ({ categories }) => {
         if (categories.length > 0) {
             fetchArticleByCategory();
         }
-    });
+    }, [categories]);
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-md">
+        <div className="p-4 bg-white rounded-lg shadow-md" itemScope itemType="https://schema.org/Article">
             {articleByCategories.length > 0 ? (
                 articleByCategories.map((categoryData, index) => (
                     <div className="mb-6" key={index}>
-                        <h3 className="text-lg font-semibold mb-2">{categoryData.category}</h3>
-                        <ul className="space-y-2">
+                        <h3 className="text-lg font-semibold mb-2" itemProp="headline">{categoryData.category}</h3>
+                        <ul className="space-y-2" itemProp="articleBody">
                             {categoryData.articles.map((article, idx) => (
                                 <li key={idx}>
-                                    {/* Link to article details page */}
                                     <Link
                                         to={`/articles/${article.id}`}
                                         className="text-blue-600 hover:underline"
+                                        itemProp="url"
+                                        aria-label={`Read article titled "${article.title}"`}
                                     >
-                                        {article.title}
+                                        <span itemProp="name">{article.title}</span>
                                     </Link>
                                 </li>
                             ))}
