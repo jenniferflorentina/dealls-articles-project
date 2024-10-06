@@ -97,7 +97,7 @@ const ArticleDetailsPage = () => {
                             {/* Content box */}
                             <div className="pb-4 px-4 prose max-w-none">
                                 <div
-                                    dangerouslySetInnerHTML={{ __html: articleDetails.content }}
+                                    dangerouslySetInnerHTML={{ __html: unescape(articleDetails.content.replace(/\\u/g, '%u').replace(/\\/g, ''))}}
                                 />
                             </div>
                         </>
