@@ -77,15 +77,15 @@ const ArticleDetailsPage = () => {
                     {articleDetails ? (
                         <>
                             {/* Title and button box */}
-                            <div className="p-4 flex justify-between items-start lg:items-center">
-                                <h1 className="text-4xl font-bold" itemProp="headline">{articleDetails.title}</h1>
+                            <div className="p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                <h1 className="text-4xl font-bold mb-2 sm:mb-0" itemProp="headline">{articleDetails.title}</h1>
                                 
-                                {/* Share button beside title */}
+                                {/* Share button placed under title on mobile (flex-col on mobile) */}
                                 <Button
                                     onClick={handleShareClick}
                                     appearance="primary"
                                     size="md"
-                                    className="mt-4 sm:mt-0 sm:ml-4"
+                                    className="sm:ml-4"
                                     aria-label={`Share ${articleDetails.title}`} // Accessible label
                                 >
                                     Share this article
